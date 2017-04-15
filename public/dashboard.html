@@ -534,7 +534,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form">
+            <form role="form" id="addAudioForm">
               <div class="box-body">
                 <div class="form-group">
                   <label for="audioTitle">Title</label>
@@ -567,44 +567,9 @@
                 <h3 class="box-title">Audios Uploaded</h3>
                     
               </div><!-- /.box-header -->
-              <div class="box-body" style="max-height:30em;overflow-y:auto;" >
-                    <div class="info-box">
-                        <!-- Apply any bg-* class to to the icon to color it -->
-                        <span class="info-box-icon bg-red"><i class="fa  fa-volume-up"></i></span>
-                        <div class="info-box-content">
-                          <span class="info-box-text"><b>Audio Title</b></span>
-                           Uploaded On <span class="info-box-text"></span>
-                          <span class="info-box-text"><a href="#">Audio url</a></span>
-                        </div><!-- /.info-box-content -->
-                      </div><!-- /.info-box -->
-                       <div class="info-box">
-                        <!-- Apply any bg-* class to to the icon to color it -->
-                        <span class="info-box-icon bg-red"><i class="fa  fa-volume-up"></i></span>
-                        <div class="info-box-content">
-                          <span class="info-box-text"><b>Audio Title</b></span>
-                           Uploaded On <span class="info-box-text"></span>
-                          <span class="info-box-text"><a href="#">Audio url</a></span>
-                        </div><!-- /.info-box-content -->
-                      </div><!-- /.info-box -->
-                       <div class="info-box">
-                        <!-- Apply any bg-* class to to the icon to color it -->
-                        <span class="info-box-icon bg-red"><i class="fa  fa-volume-up"></i></span>
-                        <div class="info-box-content">
-                          <span class="info-box-text"><b>Audio Title</b></span>
-                           Uploaded On <span class="info-box-text"></span>
-                          <span class="info-box-text"><a href="#">Audio url</a></span>
-                        </div><!-- /.info-box-content -->
-                      </div>
-                      <!-- /.info-box -->
-                      <div class="info-box">
-                        <!-- Apply any bg-* class to to the icon to color it -->
-                        <span class="info-box-icon bg-red"><i class="fa  fa-volume-up"></i></span>
-                        <div class="info-box-content">
-                          <span class="info-box-text"><b>Audio Title</b></span>
-                           Uploaded On <span class="info-box-text"></span>
-                          <span class="info-box-text"><a href="#">Audio url</a></span>
-                        </div><!-- /.info-box-content -->
-                      </div><!-- /.info-box -->
+              <div class="box-body" style="max-height:30em;overflow-y:auto;" id="audio-box" >
+                                           <div class="info-box">
+                    
                </div><!-- /.box-body -->
                   
                   
@@ -624,7 +589,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form role="form">
+            <form role="form" id="addMessageForm">
               <div class="box-body">
                 <div class="form-group">
                   <label for="message">Message of the day</label>
@@ -664,7 +629,7 @@
               <!-- /.box-header -->
               <!--Main content of mesage of the day-->
               
-              <div class="box-body" style="max-height:30em;overflow-y:auto;" >
+              <div class="box-body" style="max-height:30em;overflow-y:auto;" id="message-box" >
               <!--sample message box starts-->
                 <div class="box box-danger">
                     <div class="box-header with-border">
@@ -918,7 +883,8 @@ function loadAudio(){
     var template = $('#audio-template').html();
     
 	$('#master').append(template);
-	
+	 $('#addAudioForm').submit(function(e){e.preventDefault();addAudio();})
+	getAudios();
 }
 function loadMessage(){
 	console.log("In message function");
@@ -929,6 +895,8 @@ function loadMessage(){
     var template = $('#message-template').html();
     
 	$('#master').append(template);
+    $('#addMessageForm').submit(function(e){e.preventDefault();addMessage();})
+	getMessages();
 	
 }
 function loadNews(){
