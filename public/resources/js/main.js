@@ -16,25 +16,31 @@ $.fn.serializeObject = function()
     });
     return o;
 };
-
+//----------------------------------CUSTOM FUNCTIONS---------------------------------------------------------------
+function getExactDate(d){
+    var date = new Date(d.replace("T"," ").replace(/-/g,"/"));
+    var mdate=date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+    return mdate;
+}
 //------------------------------------------VIDEO STARTS -----------------------------------------------------------
 function addVideo(){
-  title=$('#videoTitle').val();
-  desc=$('#videoDesc').val();
-  videoPath=$('#videoPath').val();
+ 
   sendobject=JSON.stringify($('#addVideoForm').serializeObject());
   console.log(sendobject);
  
  $.ajax({
      type:'POST',
      url:globalroot+"addVideo",
+     contentType: "application/json",
      data:sendobject,
      encode:true
  }).done(function(data){
      console.log(data);
+     $('#addVideoForm')[0].reset();
  }).fail(function(data){
      console.log(data);
  });
+    
   getVideos();
 
  
@@ -43,8 +49,8 @@ function addVideo(){
 
 function getVideos(){
      $.ajax({
-            type        : 'GET', 
-            url         : root+'videos', 
+            type        : 'POST', 
+            url         : globalroot+'videos', 
             encode      : true
         })
             // using the done promise callback
@@ -61,7 +67,9 @@ function getVideos(){
                         
                         output.empty();
                         data.forEach(function(video){
-                             output.mustache('video-template', { title: video.title,date:video.uploadDate,url:video.path,desc:video.desc });
+                            
+                             var mdate=getExactDate(video.created);
+                             output.mustache('video-template', { title: video.title,date:mdate,url:video.videoPath,desc:video.desc });
                          });
                        
                     });
@@ -78,12 +86,13 @@ function getVideos(){
 
 //------------------------------------------AUDIO STARTS -----------------------------------------------------------
 function addAudio(){
-  title=$('#audioTitle').val();
-  desc=$('#audioDesc').val();
-  videoPath=$('#audioPath').val();
+  
   sendobject=JSON.stringify($('#addAudioForm').serializeObject());
   console.log(sendobject);
- 
+  $.ajax({
+      type:'POST',
+      
+  });
   getAudios();
 
  
@@ -92,8 +101,8 @@ function addAudio(){
 
 function getAudios(){
      $.ajax({
-            type        : 'GET', 
-            url         : root+'audios', 
+            type        : 'POST', 
+            url         : globalroot+'audios', 
             encode      : true
         })
             // using the done promise callback

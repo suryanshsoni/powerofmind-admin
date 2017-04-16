@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Dashboard</title>
+    <script src="//cdn.rawgit.com/jpillora/xdomain/0.7.4/dist/xdomain.min.js" slave="http://139.59.64.249:3000/proxy"></script>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -28,13 +29,23 @@
   <link rel="stylesheet" href="./resources/plugins/daterangepicker/daterangepicker.css">
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="./resources/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+<!--Dropzone css-->
+    <link rel="stylesheet" href="resources/plugins/dropzone/dropzone.css">
   <link rel="import" href=""templates="templates/landing.html">
+ 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+    <style>
+        .dropzone {
+        border: 2px dashed #0087F7;
+        border-radius: 5px;
+        background: white;
+    }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -406,6 +417,9 @@
 <script src="./resources/dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="./resources/dist/js/demo.js"></script>
+<!--Dropzone JS-->
+<script src="resources/plugins/dropzone/dropzone.js"></script>
+
 <!--All form related scripts here:-->
 <script src="resources/js/main.js" type="text/javascript"></script>
 
@@ -487,15 +501,16 @@
               <div class="box-body">
                 <div class="form-group">
                   <label for="videoTitle">Title</label>
-                  <input type="text" class="form-control" id="videoTitle"  name="videoTitle" placeholder="Enter title of video">
+                  <input type="text" class="form-control"   name="title" placeholder="Enter title of video">
                 </div>
-                <div class="form-group">
-                  <label for="videoURL">URL</label>
-                  <input type="text" class="form-control" id="videoPath" name="videoPath" placeholder="URL of the video">
-                </div>
+               
                 <div class="form-group">
                   <label>Description</label>
-                  <textarea class="form-control" rows="3" id="videoDesc" name="videoDesc" placeholder="Enter description"></textarea>
+                  <textarea class="form-control" rows="3" name="desc" placeholder="Enter description"></textarea>
+                </div>
+                 <div class="form-group">
+                  <label for="videoURL">URL</label>
+                  <input type="text" class="form-control" name="videoPath" placeholder="URL of the video">
                 </div>
                 <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -538,19 +553,22 @@
               <div class="box-body">
                 <div class="form-group">
                   <label for="audioTitle">Title</label>
-                  <input type="text" class="form-control" id="audioTitle" placeholder="Enter title of email">
+                  <input type="text" class="form-control" name="title" placeholder="Enter title">
                 </div>
                 
                 <div class="form-group">
                   <label>Description</label>
-                  <textarea class="form-control" rows="3" id="audioDesc" placeholder="Enter description"></textarea>
+                  <textarea class="form-control" rows="3" name="desc" placeholder="Enter description"></textarea>
                 </div>
                 
+                
+       
               <!-- /.box-body -->
                <div class="form-group">
                   <label for="exampleInputFile">File input</label>
-                  <input type="file" id="audioFile">
-
+                  <div class="dropzone dropzone-previews" id="my-dropzone" name="audioPath">
+                  
+                    </div>
                   <p class="help-block">Help text here.</p>
                 </div>
               <div class="box-footer">
@@ -883,8 +901,36 @@ function loadAudio(){
     var template = $('#audio-template').html();
     
 	$('#master').append(template);
-	 $('#addAudioForm').submit(function(e){e.preventDefault();addAudio();})
+    //$('#addAudioForm').submit(function(e){e.preventDefault();addAudio();})
 	getAudios();
+    $("div#my-dropzone").dropzone({ 
+        url: "http://139.59.64.249:3000/addAudio",
+        autoProcessQueue: false,
+        addRemoveLinks:true,
+        //acceptedFiles: "audio/*",
+        maxFiles: 1,
+        init: function() {
+        var myDropzone = this;
+        $('#addAudioForm').submit(function(e){e.preventDefault();e.stopPropagation();myDropzone.processQueue();})
+        this.on('sending', function (data, xhr, formData) {
+            
+              $("#addAudioForm").find("input").each(function(){
+                    formData.append($(this).attr("name"), $(this).val());
+                    });
+                $("#addAudioForm").find("textarea").each(function(){
+                    formData.append($(this).attr("name"), $(this).val());
+                    });
+                });
+        this.on("error",function(files,errorMessage,xhr){
+           console.log(errorMessage); 
+        });
+        this.on("success",function(file,res){
+            console.log(res);
+        })
+        }
+                         
+     });
+   
 }
 function loadMessage(){
 	console.log("In message function");

@@ -1,0 +1,17 @@
+{
+  "posts": [
+    { "id": 1, "title": "json-server", "author": "typicode" }
+  ],
+  "comments": [
+    { "id": 1, "body": "some comment", "postId": 1 }
+  ],
+  "profile": { "name": "typicode" },
+  "videos":[
+      {"title":"title1","path":"http://www.youtube.com","uploadDate":"2017-08-10","desc":"sasmple 1"},
+      {"title":"title2","path":"youtub2e","uploadDate":"2017-08-09","desc":"sasmple 2"}     
+ ],
+    "audios":[
+      {"title":"title1","path":"http://www.youtube.com","uploadDate":"2017-08-10","desc":"sasmple 1"},
+      {"title":"title2","path":"youtub2e","uploadDate":"2017-08-09","desc":"sasmple 2"}     
+ ]
+}
