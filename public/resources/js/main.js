@@ -136,12 +136,22 @@ function getAudios(){
 
 //------------------------------------------MESSAGE STARTS -----------------------------------------------------------
 function addMessage(){
-  title=$('#audioTitle').val();
-  desc=$('#audioDesc').val();
-  videoPath=$('#audioPath').val();
-  sendobject=JSON.stringify($('#addAudioForm').serializeObject());
+  
+  sendobject=JSON.stringify($('#addMessageForm').serializeObject());
   console.log(sendobject);
- 
+    
+    $.ajax({
+         type:'POST',
+         url:globalroot+"writemessage",
+         contentType: "application/json",
+         data:sendobject,
+         encode:true
+     }).done(function(data){
+         console.log(data);
+         $('#addMessageForm')[0].reset();
+     }).fail(function(data){
+         console.log(data);
+     });
   getMessages();
 
  
