@@ -1,6 +1,7 @@
 var root="http://localhost:3002/";
 var globalroot="http://139.59.64.249:3000/";
 $.fn.serializeObject = function()
+
 {
     var o = {};
     var a = this.serializeArray();
@@ -16,6 +17,22 @@ $.fn.serializeObject = function()
     });
     return o;
 };
+var entityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;',
+  '`': '&#x60;',
+  '=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return entityMap[s];
+  });
+}
 //----------------------------------CUSTOM FUNCTIONS---------------------------------------------------------------
 function getExactDate(d){
     var date = new Date(d.replace("T"," ").replace(/-/g,"/"));
@@ -37,8 +54,10 @@ function addVideo(){
  }).done(function(data){
      console.log(data);
      $('#addVideoForm')[0].reset();
+      $.snackbar({content:"Video added successfully!", timeout: 2000,id:"mysnack"});
  }).fail(function(data){
      console.log(data);
+      $.snackbar({content:"Video addition failed!", timeout: 2000,id:"mysnack"});
  });
     
   getVideos();
@@ -67,9 +86,11 @@ function getVideos(){
                         
                         output.empty();
                         data.forEach(function(video){
-                            
+                             console.log(video);
                              var mdate=getExactDate(video.created);
-                             output.mustache('video-template', { title: video.title,date:mdate,url:video.videoPath,desc:video.desc });
+                             //var vidurl="https://www.youtube.com/embed/"+video.videoPath.split("=").pop();
+                               // console.log(vidurl);
+                             output.mustache('video-template', {id:video._id, title: video.title,date:mdate,url:video.videoPath,desc:video.desc });
                          });
                        
                     });
@@ -81,7 +102,35 @@ function getVideos(){
                 console.log(data);
             });
 }
+function updateVideo(video){
+    id=video.split("-")[1];
+    $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'audios', 
+            data        : {'id':id},
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
 
+                // log data to the console so we can see
+                console.log(data);
+                $('#videoHeader').val("Editing "+data.title);
+                $('#videotitle').val(data.title);
+                $('#videodesc').val(data.desc);
+                $('#videourl').val(data.videoPath);
+                /*
+                    
+                */
+                 $.snackbar({content:"Video updated successfully!", timeout: 2000,id:"mysnack"});
+            })
+            .fail(function(data){
+        
+                console.log(data);
+            });
+    getVideos();
+   // $.snackbar({content:"Video deleted successfully!", timeout: 2000,id:"mysnack"});
+}
 //------------------------------------------VIDEO ENDS  -----------------------------------------------------------
 
 //------------------------------------------AUDIO STARTS -----------------------------------------------------------
@@ -119,7 +168,9 @@ function getAudios(){
                         
                         output.empty();
                         data.forEach(function(audio){
-                             output.mustache('audio-template', { title: audio.title,date:audio.uploadDate,url:audio.path });
+                            console.log(audio);
+                             var mdate=getExactDate(audio.created);
+                             output.mustache('audio-template', { id:audio._id,title: audio.title,date:mdate,url:globalroot+audio.audioPath });
                          });
                        
                     });
@@ -149,8 +200,11 @@ function addMessage(){
      }).done(function(data){
          console.log(data);
          $('#addMessageForm')[0].reset();
+         getMessages();
+        $.snackbar({content:"Message added successfully!", timeout: 2000,id:"mysnack"});
      }).fail(function(data){
          console.log(data);
+        $.snackbar({content:"Addition of message failed!", timeout: 2000,id:"mysnack"});
      });
   getMessages();
 
@@ -178,14 +232,25 @@ function getMessages(){
                        
                         output.empty();
                         data.forEach(function(message){
+                            console.log(message);
                             var date = new Date(
                                 message.date
                                 .replace("T"," ")
                                 .replace(/-/g,"/")
                             );
                              var mdate=date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
-                             output.mustache('message-template', {date:mdate,thought:message.message});
+                             
+                            if(message.imagePath!=""){
+                                output.mustache('message-img-template', {date:mdate,thought:message.message,url:globalroot+message.imagePath});
+                            }
+                           else{
+                               console.log("outputing without image")
+                               output.mustache('message-template', {date:mdate,thought:message.message});
+                           }
+                            
+                             
                          });
+                    
                        
                     });
                
@@ -198,3 +263,143 @@ function getMessages(){
 }
 
 //------------------------------------------MESSAGE ENDS-----------------------------------------------------------
+
+//------------------------------------------Live Darshan STARTS -----------------------------------------------------------
+function addLiveVideo(){
+ 
+  sendobject=JSON.stringify($('#addLiveVideoForm').serializeObject());
+  console.log(sendobject);
+ 
+ $.ajax({
+     type:'POST',
+     url:globalroot+"addLiveDarshan",
+     contentType: "application/json",
+     data:sendobject,
+     encode:true
+ }).done(function(data){
+     console.log(data);
+     $('#addLiveVideoForm')[0].reset();
+      $.snackbar({content:"Live stream added successfully!", timeout: 2000,id:"mysnack"});
+ }).fail(function(data){
+     console.log(data);
+ });
+    
+  getLiveVideos();
+
+ 
+
+}
+
+function getLiveVideos(){
+     $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'liveDarshan', 
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $.Mustache.load('templates/live-video.htm')
+					.fail(function () { 
+						console.log('Failed to load templates from <code>templates.htm</code>');
+					})
+					.done(function () {
+                        var output=$('#live-video-box');
+                        
+                        output.empty();
+                        data.forEach(function(video){
+                            
+                             var mdate=getExactDate(video.created);
+                             output.mustache('live-video-template', { title: video.title,date:mdate,url:video.videoPath,desc:video.desc });
+                         });
+                       
+                    });
+               
+                // here we will handle errors and validation messages
+            })
+            .fail(function(data){
+        
+                console.log(data);
+            });
+}
+
+//------------------------------------------LIVE DARSHAN  ENDS  -----------------------------------------------------------
+//------------------------------------------NEWS STARTS -----------------------------------------------------------
+function addNews(){
+  
+    title=$("#news-title").val();
+    content=escapeHtml($("#news-editor").val());
+   
+   
+    sendob=JSON.stringify({'title':title,'desc':content});
+ 
+    $.ajax({
+         type:'POST',
+         url:globalroot+"addNews",
+         contentType: "application/json",
+         data:sendob,
+         encode:true
+     }).done(function(data){
+         console.log(data);
+         $('#addNewsForm')[0].reset();
+        
+        $.snackbar({content:"News added successfully!", timeout: 2000,id:"mysnack"});
+     }).fail(function(data){
+         console.log(data);
+        $.snackbar({content:"Addition of  news failed!", timeout: 2000,id:"mysnack"});
+     });
+  
+
+ 
+
+}
+
+function getNews(){
+     $.ajax({
+            type        : 'POST', 
+            url         : 'http://139.59.64.249:3000/news', 
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $.Mustache.load('templates/news.htm')
+					.fail(function () { 
+						console.log('Failed to load templates from <code>templates.htm</code>');
+					})
+					.done(function () {
+                        var output=$('#latest-news');
+                       
+                        output.empty();
+                        data.forEach(function(news){
+                            console.log(news);
+                            var date = new Date(
+                                news.created
+                                .replace("T"," ")
+                                .replace(/-/g,"/")
+                            );
+                             var mdate=date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+                             
+                            
+                                output.mustache('latest-news-template', {id:news._id,title:news.title,content:news.desc,date:mdate});
+                           
+                          
+                             
+                         });
+                    
+                       
+                    });
+               
+                // here we will handle errors and validation messages
+            })
+            .fail(function(data){
+        
+                console.log(data);
+            });
+}
+
+//------------------------------------------NEWS ENDS-----------------------------------------------------------

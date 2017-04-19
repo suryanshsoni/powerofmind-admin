@@ -6,7 +6,14 @@
     <div class="info-box-content">
       <span class="info-box-text"><b>{{title}}</b></span>
       <span class="info-box-text"> Uploaded On {{date}}</span>
-      <span class="info-box-text"><a href={{url}}>Listen</a></span>
+        <audio controls>
+            <source src={{url}}>
+        </audio>
+      <!--<span class="info-box-text"><a target="_blank"href={{url}}>Listen</a></span>-->
+    <div style="text-align:right">
+            <button class="btn btn-xs btn-danger" id='del-{{id}}'>Delete</button>
+            <button class="btn btn-xs btn-info" id='upd-{{id}}' onclick='updateAudio(this.id)'>Update</button>
+    </div>
     </div><!-- /.info-box-content -->
   </div><!-- /.info-box -->
 

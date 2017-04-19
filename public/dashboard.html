@@ -35,9 +35,12 @@
  <!--Snackbar CSS-->
    <link rel="stylesheet" href="resources/plugins/snackbar/dist/snackbar.min.css">
    <link rel="stylesheet" href="resources/plugins/snackbar/themes-css/material.css">
-<!--CKEDITOR-->
     
-    <script src="resources/plugins/ckeditor/ckeditor.js"></script>
+<!--WYSIWYG EDITOR-->
+      <link rel="stylesheet" href="resources/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+     
+
+    
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -50,15 +53,32 @@
         border-radius: 5px;
         background: white;
     }
-        
+        .sidebar-menu{
+            padding-top:25px;
+        }
+        .card {
+            /* Add shadows to create the "card" effect */
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        /* On mouse-over, add a deeper shadow */
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+        /* Add some padding inside the card container */
+        .card-container {
+            padding: 2px 16px;
+        }
     </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-red-light sidebar-mini">
 <div class="wrapper">
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="index2.html" class="logo">
+    <a href="dashboard.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>P</b>OM</span>
       <!-- logo for regular state and mobile devices -->
@@ -111,13 +131,13 @@
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
-       
-        <li class="active ">
+        
+        <li class="active " id="dashboard-li">
           <a href="#" onclick="loadLanding()">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
        </li>
-       <li class="treeview">
+       <li class="" id="video-li">
           <a href="#" onclick="loadVideo()" >
             <i class="fa fa-video-camera"></i>
             <span>Videos</span>
@@ -125,7 +145,7 @@
           </a>
           
         </li>
-        <li class="treeview">
+        <li class="" id="audio-li">
           <a href="#" onclick="loadAudio()" >
             <i class="fa fa-volume-up"></i>
             <span>Audio</span>
@@ -134,13 +154,19 @@
           </a>
           
         </li>
+          
+       <li class="" id="live-li">
+            <a href="#" onclick="loadLiveVideo()">
+            <i class="fa fa-circle"></i> <span>Live Darshan</span>
+          </a>
+       </li>
         
-        <li>
+        <li id="message-li">
           <a href="#" onclick="loadMessage()">
             <i class="fa fa-envelope"></i> <span>Message of the day</span>
         </a>
-        </li>
-        <li>
+        </li >
+        <li id="news-li">
           <a href="#" onclick="loadNews()">
             <i class="fa fa-newspaper-o"></i> <span>News</span>
         </a>
@@ -157,13 +183,10 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Dashboard
-        <small>Control panel</small>
+        Control Panel
+        
       </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
-      </ol>
+     
     </section>
 
     <!-- Main content -->
@@ -426,6 +449,9 @@
 <!--Dropzone JS-->
 <script src="resources/plugins/dropzone/dropzone.js"></script>
     <script src="resources/plugins/snackbar/dist/snackbar.min.js"></script>
+<!--WYSWYG EDITOR-->
+<script src="/resources/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>  
+<script src="/resources/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.js"></script>  
 <!--All form related scripts here:-->
 <script src="resources/js/main.js" type="text/javascript"></script>
 
@@ -495,11 +521,11 @@
       </div>
 </script>
 <script id="video-template" type="text/x-custom-template">
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-6 ">
           <!-- general form elements -->
-          <div class="box box-primary">
+          <div class="box box-primary card">
             <div class="box-header with-border">
-              <h3 class="box-title">Add Video</h3>
+              <h3 class="box-title" id="videoHeader">Add Video</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -507,16 +533,16 @@
               <div class="box-body">
                 <div class="form-group">
                   <label for="videoTitle">Title</label>
-                  <input type="text" class="form-control"   name="title" placeholder="Enter title of video">
+                  <input type="text" class="form-control"   name="title" id="videotitle" placeholder="Enter title of video">
                 </div>
                
                 <div class="form-group">
                   <label>Description</label>
-                  <textarea class="form-control" rows="3" name="desc" placeholder="Enter description"></textarea>
+                  <textarea class="form-control" rows="3" name="desc" id="videodesc" placeholder="Enter description"></textarea>
                 </div>
                  <div class="form-group">
                   <label for="videoURL">URL</label>
-                  <input type="text" class="form-control" name="videoPath" placeholder="URL of the video">
+                  <input type="text" class="form-control" name="videoPath" id="videourl" placeholder="URL of the video">
                 </div>
                 <div class="box-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -531,7 +557,7 @@
 
         </div>
         <div class="col-sm-6 col-md-6">
-            <div class="box box-solid box-success">
+            <div class="box box-solid box-success  card">
               <div class="box-header with-border">
                 <h3 class="box-title">Videos Uploaded</h3>
                     
@@ -549,7 +575,7 @@
  <script id="audio-template" type="text/x-custom-template">
     <div class="col-sm-12 col-md-6">
           <!-- general form elements -->
-          <div class="box box-primary">
+          <div class="box box-primary  card">
             <div class="box-header with-border">
               <h3 class="box-title">Add Audio</h3>
             </div>
@@ -586,7 +612,7 @@
         </div>
   </div>
    <div class="col-md-6 col-sm-12">
-        <div class="box box-solid box-success">
+        <div class="box box-solid box-success  card">
               <div class="box-header with-border">
                 <h3 class="box-title">Audios Uploaded</h3>
                     
@@ -607,7 +633,7 @@
  <script id="message-template" type="text/x-custom-template">
     <div class="col-sm-12 col-md-6">
           <!-- general form elements -->
-          <div class="box box-primary">
+          <div class="box box-primary  card">
             <div class="box-header with-border">
               <h3 class="box-title">Message of the day</h3>
             </div>
@@ -647,7 +673,7 @@
         <!--message listsing starts-->
         <div class="col-sm-12 col-md-6">
         
-             <div class="box box-solid box-success">
+             <div class="box box-solid box-success  card">
               <div class="box-header with-border">
                 <h3 class="box-title">Messages Of The Day</h3>
                     
@@ -656,72 +682,8 @@
               <!--Main content of mesage of the day-->
               
               <div class="box-body" style="max-height:30em;overflow-y:auto;" id="message-box" >
-              <!--sample message box starts-->
-                <div class="box box-danger">
-                    <div class="box-header with-border">
-                      <h3 class="box-title">1 April 2017</h3> 
-
-                      <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <!-- /.box-tools -->
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <blockquote>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                          <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
-                        </blockquote>
-                        <img class="img-responsive pad" src="resources/photo2.png" alt="Photo">
-                     </div>
-                    <!-- /.box-body -->
-                  </div>
-            <!--sample box ends-->
-                <!--sample message box starts-->
-                <div class="box box-danger">
-                    <div class="box-header with-border">
-                      <h3 class="box-title">2 April 2017</h3> 
-
-                      <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <!-- /.box-tools -->
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <blockquote>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                          <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
-                        </blockquote>
-                        <img class="img-responsive pad" src="resources/photo2.png" alt="Photo">
-                     </div>
-                    <!-- /.box-body -->
-                  </div>
-            <!--sample box ends-->
-            <!--sample message box starts-->
-                <div class="box box-danger collapsed-box">
-                    <div class="box-header with-border">
-                      <h3 class="box-title">3 April 2017</h3> 
-
-                      <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                        </button>
-                      </div>
-                      <!-- /.box-tools -->
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
-                        <blockquote>
-                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                          <small>Someone famous in <cite title="Source Title">Source Title</cite></small>
-                        </blockquote>
-                        <img class="img-responsive pad" src="resources/photo2.png" alt="Photo">
-                     </div>
-                    <!-- /.box-body -->
-                  </div>
-            <!--sample box ends-->
+              
+          
                </div><!-- /.box-body -->
                   
                   
@@ -735,7 +697,7 @@
  
 <script id="news-template" type="text/x-custom-template">
    <div class="col-sm-12">
-        <div class="box box-info">
+        <div class="box box-info  card">
             <div class="box-header">
               <h3 class="box-title">Add News
                 <small>@PowerOfMind</small>
@@ -744,18 +706,86 @@
               
             </div>
             <!-- /.box-header -->
-            <div class="box-body pad">
-              <form>
-                    <textarea id="newseditor" name="newseditor" rows="10" cols="80" style="visibility: hidden; display: none;">                                            This is my textarea to be replaced with CKEditor.
-                    </textarea>
+            <div class="box-body pad " >
+                <form id="addNewsForm">
+                <div class="form-group">
+                  <label for="title">Title</label>
+                  <input type="text" class="form-control" name="title" id="news-title" placeholder="Enter title">
+                </div>
+                <div class="form-group">
+              <textarea style="width:100%"id="news-editor" placeholder="Enter news here">
+                    
+              </textarea>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">Add News</button>
+              </div>
               </form>
             </div>
           </div>
     </div>
+    <div class="col-sm-12">
+        <div id="latest-news">
+        </div>
+    </div>
     
   
 </script> 
+<script id="live-template" type="text/x-custom-template">
+    <div class="col-sm-12 col-md-6">
+          <!-- general form elements -->
+          <div class="box box-primary  card">
+            <div class="box-header with-border">
+              <h3 class="box-title">Add Live Darshan Stream</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="addLiveVideoForm">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="videoTitle">Title</label>
+                  <input type="text" class="form-control"   name="title" placeholder="Enter title of video">
+                </div>
+               
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea class="form-control" rows="3" name="desc" placeholder="Enter description"></textarea>
+                </div>
+                 <div class="form-group">
+                  <label for="videoURL">URL</label>
+                  <input type="text" class="form-control" name="videoPath" placeholder="URL of the live video">
+                </div>
+                <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+               </div>
+           </form>
+          </div>
+          <!-- /.box -->
+
+          <!-- Form Element sizes -->
+          
+
+        </div>
+        <div class="col-sm-6 col-md-6">
+            <div class="box box-solid box-success  card">
+              <div class="box-header with-border">
+                <h3 class="box-title">Active Live Darshan Link</h3>
+                    
+              </div><!-- /.box-header -->
+              <div class="box-body" id='live-video-box' style="max-height:30em;overflow-y:auto;" >
+              
+              </div><!-- /.box-body -->
+                  
+                  
+              <div class="box-footer">
+                
+              </div><!-- box-footer -->
+            </div><!-- /.box -->
+        </div>
+ </script>
 <script>
+var activeli="#dashboard-li";
 function loadLanding(){
 	console.log("In test function");
 	var remove = document.getElementById('master');
@@ -765,6 +795,9 @@ function loadLanding(){
     var template = $('#landing').html();
    // console.log(template+"--");
 	$('#master').append(template);
+    $(activeli).removeClass("active");
+    $("#dashboard-li").addClass("active");
+    activeli="#dashboard-li";
 	
 }
 function loadVideo(){
@@ -777,6 +810,9 @@ function loadVideo(){
     
 	$('#master').append(template);
     $('#addVideoForm').submit(function(e){e.preventDefault();addVideo();})
+    $(activeli).removeClass("active");
+    $("#video-li").addClass("active");
+    activeli="#video-li";
 	getVideos();
 }
 function loadAudio(){
@@ -788,13 +824,17 @@ function loadAudio(){
     var template = $('#audio-template').html();
     
 	$('#master').append(template);
+    $(activeli).removeClass("active");
+    activeli="#audio-li";
+    $(activeli).addClass("active");
+  
     //$('#addAudioForm').submit(function(e){e.preventDefault();addAudio();})
 	getAudios();
     $("div#my-dropzone").dropzone({ 
         url: "http://139.59.64.249:3000/addAudio",
         autoProcessQueue: false,
         addRemoveLinks:true,
-        //acceptedFiles: "audio/*",
+       // acceptedFiles: "audio/*",
         maxFiles: 1,
         uploadMultiple:false,
         paramName:"file",
@@ -818,6 +858,7 @@ function loadAudio(){
             console.log(res);
             myDropzone.removeFile(file);
             $('#addAudioForm')[0].reset();
+            getAudios();
             $.snackbar({content:"Audio uploaded successfully!", timeout: 2000,id:"mysnack"});
         })
         }
@@ -834,13 +875,16 @@ function loadMessage(){
     var template = $('#message-template').html();
     
 	$('#master').append(template);
+    $(activeli).removeClass("active");
+    activeli="#message-li";
+    $(activeli).addClass("active");
    // $('#addMessageForm').submit(function(e){e.preventDefault();addMessage();})
 	getMessages();
        $("div#message-dropzone").dropzone({ 
         url: "http://139.59.64.249:3000/writemessage",
         autoProcessQueue: false,
         addRemoveLinks:true,
-        //acceptedFiles: "audio/*",
+        acceptedFiles: "image/*",
         maxFiles: 1,
         uploadMultiple:false,
         paramName:"file",
@@ -872,6 +916,11 @@ function loadMessage(){
             console.log(res);
             $('#addMessageForm')[0].reset();
             
+            myDropzone.removeFile(file);
+           
+            getMessages();
+            $.snackbar({content:"Message added successfully!", timeout: 2000,id:"mysnack"});
+            
         })
         }
                          
@@ -885,10 +934,18 @@ function loadNews(){
 		remove.removeChild(remove.lastChild);
 	}
     var template = $('#news-template').html();
-    
+    $(activeli).removeClass("active");
+    activeli="#news-li";
+    $(activeli).addClass("active");
 	$('#master').append(template);
-    CKEDITOR.replace('newseditor');
-	
+    $('#news-editor').wysihtml5();
+	$("#addNewsForm").submit(function(e){
+        
+       e.preventDefault();
+    addNews();
+       content=$("#news-editor").val();
+    });
+    getNews();
 }
 
 
@@ -897,6 +954,21 @@ $(document).ready(function(e){
    
     
 });
+function loadLiveVideo(){
+console.log("In live function");
+var remove = document.getElementById('master');
+while( remove.hasChildNodes() ){
+    remove.removeChild(remove.lastChild);
+}
+var template = $('#live-template').html();
+$(activeli).removeClass("active");
+activeli="#live-li";
+$(activeli).addClass("active");
+$('#master').append(template);
+$('#addLiveVideoForm').submit(function(e){e.preventDefault();addLiveVideo();})
+
+getLiveVideos();
+}
    
                  
 
