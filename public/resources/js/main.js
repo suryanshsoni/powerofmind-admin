@@ -33,6 +33,7 @@ function escapeHtml (string) {
     return entityMap[s];
   });
 }
+
 //----------------------------------CUSTOM FUNCTIONS---------------------------------------------------------------
 function getExactDate(d){
     var date = new Date(d.replace("T"," ").replace(/-/g,"/"));
@@ -104,10 +105,13 @@ function getVideos(){
 }
 function updateVideo(video){
     id=video.split("-")[1];
+    
     $.ajax({
             type        : 'POST', 
-            url         : globalroot+'audios', 
-            data        : {'id':id},
+            url         : globalroot+'getVideoDetails', 
+            data        :JSON.stringify({"id":id}),
+            processData: false,
+            contentType: 'application/json',
             encode      : true
         })
             // using the done promise callback
@@ -115,14 +119,44 @@ function updateVideo(video){
 
                 // log data to the console so we can see
                 console.log(data);
-                $('#videoHeader').val("Editing "+data.title);
+                $('#videoHeader').html("Editing "+data.title);
                 $('#videotitle').val(data.title);
                 $('#videodesc').val(data.desc);
                 $('#videourl').val(data.videoPath);
                 /*
                     
                 */
-                 $.snackbar({content:"Video updated successfully!", timeout: 2000,id:"mysnack"});
+                 $.snackbar({content:"You can edit the video now!", timeout: 2000,id:"mysnack"});
+            })
+            .fail(function(data){
+        
+                console.log(data);
+            });
+    getVideos();
+   // $.snackbar({content:"Video deleted successfully!", timeout: 2000,id:"mysnack"});
+}
+function deleteVideo(video){
+    id=video.split("-")[1];
+    
+    $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'removeVideo', 
+            data        :JSON.stringify({"id":id}),
+            processData: false,
+            contentType: 'application/json',
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $.snackbar({content:"Video deleted succesfully!", timeout: 2000,id:"mysnack"});
+            
+                /*
+                    
+                */
+                
             })
             .fail(function(data){
         
@@ -181,6 +215,68 @@ function getAudios(){
         
                 console.log(data);
             });
+}
+function updateAudio(audio){
+    id=audio.split("-")[1];
+   
+    $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'getAudioDetails', 
+            data        :JSON.stringify({"id":id}),
+            processData: false,
+            contentType: 'application/json',
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $('#audioHeader').html("Editing "+data.title);
+                $('#audiotitle').val(data.title);
+                $('#audiodesc').val(data.desc);
+                
+                /*
+                    
+                */
+                 $.snackbar({content:"You can edit the audio details now!The audio file is set to previous file", timeout: 2000,id:"mysnack"});
+            })
+            .fail(function(data){
+        
+                console.log(data);
+            });
+    getAudios();
+   // $.snackbar({content:"Video deleted successfully!", timeout: 2000,id:"mysnack"});
+}
+function deleteAudio(audio){
+    id=audio.split("-")[1];
+    
+    $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'removeAudio', 
+            data        :JSON.stringify({"id":id}),
+            processData: false,
+            contentType: 'application/json',
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $.snackbar({content:"Audio deleted succesfully!", timeout: 2000,id:"mysnack"});
+            
+                /*
+                    
+                */
+                
+            })
+            .fail(function(data){
+                $.snackbar({content:"Audio deletion failed!", timeout: 2000,id:"mysnack"});
+                console.log(data);
+            });
+    getAudios();
+   // $.snackbar({content:"Video deleted successfully!", timeout: 2000,id:"mysnack"});
 }
 
 //------------------------------------------AUDIO ENDS-----------------------------------------------------------
@@ -241,11 +337,11 @@ function getMessages(){
                              var mdate=date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
                              
                             if(message.imagePath!=""){
-                                output.mustache('message-img-template', {date:mdate,thought:message.message,url:globalroot+message.imagePath});
+                                output.mustache('message-img-template', {id:message._id,date:mdate,thought:message.message,url:globalroot+message.imagePath});
                             }
                            else{
                                console.log("outputing without image")
-                               output.mustache('message-template', {date:mdate,thought:message.message});
+                               output.mustache('message-template', {id:message._id,date:mdate,thought:message.message});
                            }
                             
                              
@@ -260,6 +356,36 @@ function getMessages(){
         
                 console.log(data);
             });
+}
+function deleteMessage(message){
+    id=message.split("-")[1];
+    
+    $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'removeMessage', 
+            data        :JSON.stringify({"id":id}),
+            processData: false,
+            contentType: 'application/json',
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $.snackbar({content:"Message deleted succesfully!", timeout: 2000,id:"mysnack"});
+            
+                /*
+                    
+                */
+                
+            })
+            .fail(function(data){
+                $.snackbar({content:"Message deletion failed!", timeout: 2000,id:"mysnack"});
+                console.log(data);
+            });
+    getMessages();
+   // $.snackbar({content:"Video deleted successfully!", timeout: 2000,id:"mysnack"});
 }
 
 //------------------------------------------MESSAGE ENDS-----------------------------------------------------------
@@ -312,7 +438,7 @@ function getLiveVideos(){
                         data.forEach(function(video){
                             
                              var mdate=getExactDate(video.created);
-                             output.mustache('live-video-template', { title: video.title,date:mdate,url:video.videoPath,desc:video.desc });
+                             output.mustache('live-video-template', {id:video._id, title: video.title,date:mdate,url:video.videoPath,desc:video.desc });
                          });
                        
                     });
@@ -325,12 +451,43 @@ function getLiveVideos(){
             });
 }
 
+function deleteLiveVideo(video){
+    id=video.split("-")[1];
+    
+    $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'removeLiveDarshan', 
+            data        :JSON.stringify({"id":id}),
+            processData: false,
+            contentType: 'application/json',
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $.snackbar({content:"Live video deleted succesfully!", timeout: 2000,id:"mysnack"});
+            
+                /*
+                    
+                */
+                
+            })
+            .fail(function(data){
+                $.snackbar({content:"Live video deletion failed!", timeout: 2000,id:"mysnack"});
+                console.log(data);
+            });
+    getLiveVideos();
+   // $.snackbar({content:"Video deleted successfully!", timeout: 2000,id:"mysnack"});
+}
+
 //------------------------------------------LIVE DARSHAN  ENDS  -----------------------------------------------------------
 //------------------------------------------NEWS STARTS -----------------------------------------------------------
 function addNews(){
   
     title=$("#news-title").val();
-    content=escapeHtml($("#news-editor").val());
+    content=$("#news-editor").val();
    
    
     sendob=JSON.stringify({'title':title,'desc':content});
@@ -344,7 +501,7 @@ function addNews(){
      }).done(function(data){
          console.log(data);
          $('#addNewsForm')[0].reset();
-        
+        getNews();
         $.snackbar({content:"News added successfully!", timeout: 2000,id:"mysnack"});
      }).fail(function(data){
          console.log(data);
@@ -401,5 +558,37 @@ function getNews(){
                 console.log(data);
             });
 }
+
+function deleteNews(news){
+    id=news.split("-")[1];
+    
+    $.ajax({
+            type        : 'POST', 
+            url         : globalroot+'removeNews', 
+            data        :JSON.stringify({"id":id}),
+            processData: false,
+            contentType: 'application/json',
+            encode      : true
+        })
+            // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                $.snackbar({content:"News deleted succesfully!", timeout: 2000,id:"mysnack"});
+            
+                /*
+                    
+                */
+                
+            })
+            .fail(function(data){
+                $.snackbar({content:"News deletion failed!", timeout: 2000,id:"mysnack"});
+                console.log(data);
+            });
+    getNews();
+   // $.snackbar({content:"Video deleted successfully!", timeout: 2000,id:"mysnack"});
+}
+
 
 //------------------------------------------NEWS ENDS-----------------------------------------------------------
