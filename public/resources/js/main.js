@@ -1,5 +1,5 @@
-var root="http://localhost:3002/";
-var globalroot="http://139.59.64.249:3000/";
+var root="http://localhost:3000/";
+var globalroot="http://http://35.160.30.218:3000/";
 $.fn.serializeObject = function()
 
 {
